@@ -42,9 +42,7 @@ void main(){
 				count ++;
 			}
 		}
-		if (arg[0] == NULL){
-			arg[0] = 0;
-		}
+		printf("%s...%s", arg[0], arg[1]);
 			
 		if (strcmp(base, CH_DIR) == 0){	//check for cd
 			printf ("Moved to directory:\n");
