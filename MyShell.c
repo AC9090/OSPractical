@@ -9,7 +9,7 @@ void int_handler(){
 
 char s[64], base[64];
 char *l, *m, *arg[32];
-
+char *nul = '\0';
 int exit_status;
 
 #define CH_DIR "cd"
@@ -28,13 +28,12 @@ void main(){
 		printf ("MyShell>");
 		fgets (s, 64, stdin);
 		l = s;
+		
 		int len = strlen(s);
-		//printf("%s\n", len);
 		if( s[len-1] == '\n' ){
    			s[len-1] = 0;
 		}
 		
-		strcpy(base, strsep(&l , " "));
 		int count = 0;
 		while ((m = strsep(&l , " ")) != NULL ){
 			if (strcmp(m,"") != 0){
@@ -42,7 +41,11 @@ void main(){
 				count ++;
 			}
 		}
-		printf("%s...%s", arg[0], arg[1]);
+		strcpy(base, arg[0]);
+		while (count < sizeof(arg)/sizeof(arg[0])){
+			arg[count] = nul;
+			count ++;
+		}
 			
 		if (strcmp(base, CH_DIR) == 0){	//check for cd
 			printf ("Moved to directory:\n");
@@ -63,7 +66,7 @@ void main(){
 			pid_t  pid_child;
      			pid_child = fork();
      			if (pid_child == 0){
-				execvp(base, arg);
+				execvp(base, &arg);
 				exit(0);
 			}else {
 				wait(&exit_status);
