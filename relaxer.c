@@ -34,10 +34,12 @@ static int relaxation_routine(void *irrelevant){
 		irq_new = kstat_irqs(1) + 1;
 		
 		if ((irq_new - irq_old) > 0){
+		
 			p = &init_task;
 			q = &init_task;
+			
 			p = next_task(p);
-			while (p->pid != q->pid){
+			while (p->pid != q->pid){  // maybe try greater than?
 				
 				p = next_task(p);
 				//printk("Time elapsed: %lu\nOn process: %i\n\n", cputime_to_secs(p->stime), p-> pid);
