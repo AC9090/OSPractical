@@ -16,14 +16,12 @@ int hold_no = 0;
 int end_relaxer = 0;
 int ending = 0;
 bool taken[64];	
-long threshold = 0.10;
+long threshold = 0.10;  //long's are integers!!!  C casting is done by my_float = (float)my_long;
 
-
-
-static int relaxation_routine(void *irrelevant){
-	
-	daemonize("relaxer");
-	printk("Now running relaxer\n");
+/* Pretty much problems will come from:
+Casting
+Pointers
+*/
 	
 	int irq_old = kstat_irqs(1);
 	int irq_new;
@@ -39,7 +37,7 @@ static int relaxation_routine(void *irrelevant){
 			q = &init_task;
 			
 			p = next_task(p);
-			while (p->pid != q->pid){  // maybe try greater than?
+			while (p->pid != q->pid){  // maybe try greater than? or try *p->pid
 				
 				p = next_task(p);
 				//printk("Time elapsed: %lu\nOn process: %i\n\n", cputime_to_secs(p->stime), p-> pid);
@@ -83,7 +81,7 @@ static int relaxation_routine(void *irrelevant){
 					
 					
 				}
-				p = next_task(p);
+				p = next_task(p);  // add pause here for debugging
 				
 			}
 		}
