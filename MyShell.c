@@ -9,7 +9,7 @@ void int_handler(){
 
 char s[64], base[64];
 char *l, *m, *arg[32];
-char *nul = '\0';
+char nul = '\0';
 int exit_status;
 
 #define CH_DIR "cd"
@@ -27,37 +27,39 @@ void main(){
 		
 		printf ("MyShell>");
 		fgets (s, 64, stdin);
-		l = s;
 		
 		int len = strlen(s);
 		if( s[len-1] == '\n' ){
-   			s[len-1] = 0;
+   			s[len-1] = '\0';
 		}
-		
+		l = s;
 		int count = 0;
-		while ((m = strsep(&l , " ")) != NULL ){
-			if (strcmp(m,"") != 0){
+		arg[0] = &nul;
+		//printf("%s\n", arg[0]);
+		while ((m = strsep(&l , " ")) != NULL ){	
+			if (strcmp(m,"") != 0){		//checks if strsep has been passed two consecutive spaces
 				arg[count] = m;
 				count ++;
+				
 			}
 		}
 		strcpy(base, arg[0]);
 		while (count < sizeof(arg)/sizeof(arg[0])){
-			arg[count] = nul;
+			arg[count] = NULL;
 			count ++;
-		}
+		}	
+		if (strcmp(base, CH_DIR) == 0){		//check for cd
 			
-		if (strcmp(base, CH_DIR) == 0){	//check for cd
-			printf ("Moved to directory:\n");
 					
-			if (arg[0] != NULL){
-				chdir(arg[0]);
+			if (arg[1] != NULL){
+				printf ("Moved to directory:\n");
+				chdir(arg[1]);
+				printf("%s\n", getcwd());
 			}
-			printf("%s\n", getcwd());
 			
 		} else if (strcmp(base, EXIT) == 0){	//check for exit
-			if (exit_status == 0){
-				exit_status = *arg[0] - '0';
+			if (exit_status == 0 && arg[1]){
+				exit_status = *arg[1] - '0';
 			}
 			printf ("Exiting with exit status %i\n", exit_status);
 			exit(exit_status);
